@@ -59,8 +59,9 @@ Templates and examples are available in multiple languages. Each language direct
 - 🇪🇸 **`es-ES/`** - Español (España)
 - 🇮🇱 **`he-IL/`** - עברית (ישראל)
 - 🇮🇩 **`id-ID/`** - Bahasa Indonesia (Indonesia)
+- 🇻🇳 **`vi-VN/`** - Tiếng Việt (Việt Nam)
 
-**Note**: Templates are currently in English. Translations to respective languages are planned for future versions. You can use these templates as a base and translate them according to your needs.
+**Note**: Templates are currently in English. Translations to respective languages are planned for future versions. Vietnamese (vi-VN) translations are partially completed. You can use these templates as a base and translate them according to your needs.
 
 ## 🚀 Quick Start
 
@@ -222,43 +223,16 @@ The template includes **optional sections** for decisions that significantly imp
 
 ## 🔄 Version History
 
-- **v1.6** (2026-01-26): Added multi-language support
-  - Created language-specific directories for 14 languages (fr-FR, zh-TW, zh-CN, ru-RU, de-DE, hi-IN, nl-NL, ko-KR, ja-JP, ar-SA, pt-BR, es-ES, he-IL, id-ID)
-  - Each language directory contains SAD-Template.md, ADR-Template.md, and examples
-  - Added README.md for each language directory
-  - Templates are currently in English, translations planned for future versions
-  
-- **v1.5** (2026-01-26): Organized examples into directory
-  - Created `Example/` directory for all example files
-  - Moved `Uber-SAD.md` and all ADR examples to `Example/` directory
-  - Updated README with new directory structure
-  - Added `Example/README.md` to explain examples
-  
-- **v1.4** (2026-01-26): Added additional ADR examples
-  - Added `ADR-002-Example.md` - PostgreSQL database choice decision
-  - Added `ADR-011-Example.md` - PCI DSS compliance decision
-  - Both examples demonstrate different use cases of optional sections
-  
-- **v1.3** (2026-01-26): Enhanced ADR template with optional sections
-  - Added optional sections: Architecture Impact (Context/Container diagrams, flows), Data Model Impact (ERD), Security Impact, Performance Impact, Dependencies & Libraries, Deployment Impact
-  - Updated `ADR-001-Example.md` to demonstrate usage of optional sections
-  - Enhanced README with guidance on when to use optional sections
-  
-- **v1.2** (2026-01-26): Added ADR templates
-  - Added `ADR-Template.md` - Lightweight ADR template following 2026 best practices
-  - Added `ADR-001-Example.md` - Complete ADR example for microservices decision
-  - Updated README with ADR section and best practices
-  
-- **v1.1** (2026-01-26): Added real-world example
-  - Added `Uber-SAD.md` - Complete SAD example for ride-sharing platform
-  - Demonstrates microservices architecture, real-time systems, and event-driven patterns
-  
-- **v1.0** (2026-01-26): Initial template release
-  - Complete SAD structure
-  - C4 Model diagrams (all 4 levels)
+- **v1.0** (2026-01-26): Initial release
+  - Complete SAD template structure with all sections
+  - C4 Model diagrams (all 4 levels: Context, Container, Component, Deployment)
   - ERD with Mermaid syntax
-  - Logical and Deployment views
-  - Comprehensive sections covering all aspects
+  - Logical View and Deployment View as required components
+  - ADR template with optional sections for comprehensive decision documentation
+  - Real-world examples: Ride-sharing platform SAD and multiple ADR examples
+  - Multi-language directory structure (14 languages: fr-FR, zh-TW, zh-CN, ru-RU, de-DE, hi-IN, nl-NL, ko-KR, ja-JP, ar-SA, pt-BR, es-ES, he-IL, id-ID, vi-VN)
+  - Each language directory contains templates and examples (currently in English, translations planned for future versions)
+  - Comprehensive documentation covering architecture visualization, decision records, and best practices
 
 ## 🤝 Contributing
 
