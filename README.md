@@ -120,10 +120,10 @@ The SAD template includes the following sections:
 5. **System Context** - C4 Level 1 diagram
 6. **Logical View** - C4 Level 2 Container diagram
 7. **Component View** - C4 Level 3 diagram
-8. **Deployment View** - C4 Level 4 diagram
-9. **Data Architecture & ERD** - Entity Relationship Diagram
-10. **Integration & Data Flow** - Sequence diagrams and integration patterns
-11. **Security Architecture** - Security principles and controls
+8. **Data Architecture & ERD** - Entity Relationship Diagram
+9. **Integration & Data Flow** - Sequence diagrams and integration patterns
+10. **Security Architecture** - Security principles and controls
+11. **Deployment View** - Shows how containers are deployed to infrastructure
 12. **Non-Functional Requirements** - Performance, scalability, availability
 13. **Architectural Decisions** - ADR log and key decisions
 14. **Risks & Mitigation** - Risk assessment and mitigation strategies

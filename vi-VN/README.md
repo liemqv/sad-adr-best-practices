@@ -23,6 +23,25 @@ Thư mục này cung cấp một template hiện đại và toàn diện cho Tà
 - **`Example/SAD-Example.md`**: Ví dụ thực tế - SAD đầy đủ cho nền tảng chia sẻ chuyến đi (hệ thống tương tự Uber)
 - **`Example/ADR-001-Example.md`**: Ví dụ ADR - Quyết định kiến trúc microservices
 
+## 📖 Các phần trong Template
+
+Template SAD bao gồm các phần sau:
+
+1. **Tóm tắt Điều hành** - Tổng quan và mục tiêu chính
+2. **Tầm nhìn Kiến trúc** - Tầm nhìn, nguyên tắc, ràng buộc
+3. **Yêu cầu Nghiệp vụ** - Vấn đề nghiệp vụ và yêu cầu chức năng
+4. **Cơ sở Công nghệ** - Hiện trạng và công nghệ sử dụng
+5. **Ngữ cảnh Hệ thống** - Sơ đồ C4 Cấp 1
+6. **Khung nhìn Logic** - Sơ đồ Container C4 Cấp 2
+7. **Khung nhìn Thành phần** - Sơ đồ C4 Cấp 3
+8. **Kiến trúc Dữ liệu & ERD** - Sơ đồ Quan hệ Thực thể
+9. **Tích hợp & Luồng Dữ liệu** - Sơ đồ trình tự và mẫu tích hợp
+10. **Kiến trúc Bảo mật** - Nguyên tắc và kiểm soát bảo mật
+11. **Khung nhìn Triển khai** - Cho thấy cách các container được triển khai lên hạ tầng
+12. **Yêu cầu Phi Chức năng** - Hiệu suất, khả năng mở rộng, khả dụng
+13. **Quyết định Kiến trúc** - Nhật ký ADR và các quyết định chính
+14. **Rủi ro & Giảm thiểu** - Đánh giá rủi ro và chiến lược giảm thiểu
+
 ## 🚀 Bắt đầu Nhanh
 
 1. **Clone hoặc tải xuống** repository này

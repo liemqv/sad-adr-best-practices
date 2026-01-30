@@ -15,10 +15,10 @@
 5. [System Context (C4 Level 1)](#5-system-context-c4-level-1)
 6. [Logical View (C4 Level 2 - Container)](#6-logical-view-c4-level-2---container)
 7. [Component View (C4 Level 3)](#7-component-view-c4-level-3)
-8. [Deployment View (C4 Level 4)](#8-deployment-view-c4-level-4)
-9. [Data Architecture & ERD](#9-data-architecture--erd)
-10. [Integration & Data Flow](#10-integration--data-flow)
-11. [Security Architecture](#11-security-architecture)
+8. [Data Architecture & ERD](#8-data-architecture--erd)
+9. [Integration & Data Flow](#9-integration--data-flow)
+10. [Security Architecture](#10-security-architecture)
+11. [Deployment View](#11-deployment-view)
 12. [Non-Functional Requirements](#12-non-functional-requirements)
 13. [Architectural Decisions](#13-architectural-decisions)
 14. [Risks & Mitigation](#14-risks--mitigation)
@@ -271,114 +271,12 @@ C4Component
 
 ---
 
-## 8. Deployment View (C4 Level 4)
+## 8. Data Architecture & ERD
 
-The Deployment diagram shows how containers are deployed to infrastructure.
-
-```mermaid
-C4Deployment
-    title Deployment Diagram
-    
-    Deployment_Node(cloud, "Cloud Provider", "AWS/Azure/GCP") {
-        Deployment_Node(webTier, "Web Tier", "Load Balanced") {
-            Container(webapp1, "Web App Instance 1", "React Application")
-            Container(webapp2, "Web App Instance 2", "React Application")
-        }
-        
-        Deployment_Node(apiTier, "API Tier", "Load Balanced") {
-            Container(api1, "API Gateway Instance 1", "Node.js")
-            Container(api2, "API Gateway Instance 2", "Node.js")
-        }
-        
-        Deployment_Node(appTier, "Application Tier") {
-            Container(auth1, "Auth Service Instance 1", "OAuth 2.0")
-            Container(auth2, "Auth Service Instance 2", "OAuth 2.0")
-            Container(business1, "Business Service Instance 1", "Spring Boot")
-            Container(business2, "Business Service Instance 2", "Spring Boot")
-        }
-        
-        Deployment_Node(dataTier, "Data Tier") {
-            ContainerDb_Ext(database, "Primary Database", "PostgreSQL", "Master")
-            ContainerDb_Ext(databaseReplica, "Read Replica", "PostgreSQL", "Replica")
-            ContainerQueue(messageQueue, "Message Queue", "RabbitMQ")
-        }
-        
-        Deployment_Node(cacheTier, "Cache Tier") {
-            ContainerDb_Ext(cache, "Redis Cache", "Redis", "In-memory cache")
-        }
-    }
-    
-    System_Ext(paymentGateway, "Payment Gateway", "External Service")
-    System_Ext(emailService, "Email Service", "External Service")
-    
-    Rel(webapp1, api1, "HTTPS")
-    Rel(webapp2, api2, "HTTPS")
-    Rel(api1, auth1, "HTTPS")
-    Rel(api2, auth2, "HTTPS")
-    Rel(api1, business1, "HTTPS")
-    Rel(api2, business2, "HTTPS")
-    Rel(business1, database, "JDBC")
-    Rel(business2, database, "JDBC")
-    Rel(business1, databaseReplica, "JDBC (Read)")
-    Rel(business2, databaseReplica, "JDBC (Read)")
-    Rel(business1, cache, "Redis Protocol")
-    Rel(business2, cache, "Redis Protocol")
-    Rel(business1, messageQueue, "AMQP")
-    Rel(business2, messageQueue, "AMQP")
-    Rel(business1, paymentGateway, "HTTPS")
-    Rel(business2, paymentGateway, "HTTPS")
-    Rel(business1, emailService, "HTTPS")
-    Rel(business2, emailService, "HTTPS")
-```
-
-### 8.1 Infrastructure Overview
-
-#### 8.1.1 Web Tier
-- **Instances**: 2+ load-balanced web application instances
-- **Technology**: React application served via CDN/Web Server
-- **Scaling**: Horizontal scaling based on load
-
-#### 8.1.2 API Tier
-- **Instances**: 2+ load-balanced API gateway instances
-- **Technology**: Node.js
-- **Scaling**: Horizontal scaling based on request volume
-
-#### 8.1.3 Application Tier
-- **Auth Service**: 2+ instances for high availability
-- **Business Service**: 2+ instances for high availability
-- **Technology**: Spring Boot microservices
-- **Scaling**: Horizontal scaling based on CPU/memory metrics
-
-#### 8.1.4 Data Tier
-- **Primary Database**: PostgreSQL master instance
-- **Read Replica**: PostgreSQL replica for read operations
-- **Message Queue**: RabbitMQ cluster
-- **Backup Strategy**: Daily automated backups with point-in-time recovery
-
-#### 8.1.5 Cache Tier
-- **Technology**: Redis
-- **Purpose**: In-memory caching for improved performance
-- **Scaling**: Redis cluster for high availability
-
-### 8.2 Deployment Strategy
-- **Blue-Green Deployment**: Zero-downtime deployments
-- **Rolling Updates**: Gradual rollout of new versions
-- **Health Checks**: Automated health monitoring and auto-recovery
-
-### 8.3 Network Architecture
-- **VPC**: Virtual Private Cloud for network isolation
-- **Subnets**: Public and private subnets for security
-- **Load Balancers**: Application Load Balancers for traffic distribution
-- **Security Groups**: Network-level access control
-
----
-
-## 9. Data Architecture & ERD
-
-### 9.1 Data Model Overview
+### 8.1 Data Model Overview
 Description of the data model and key entities.
 
-### 9.2 Entity Relationship Diagram (ERD)
+### 8.2 Entity Relationship Diagram (ERD)
 
 ```mermaid
 erDiagram
@@ -471,9 +369,9 @@ erDiagram
     }
 ```
 
-### 9.3 Entity Descriptions
+### 8.3 Entity Descriptions
 
-#### 9.3.1 USER
+#### 8.3.1 USER
 - **Purpose**: Stores user account information
 - **Key Attributes**: 
   - `user_id`: Primary key
@@ -481,7 +379,7 @@ erDiagram
   - `password_hash`: Encrypted password
 - **Relationships**: One-to-many with ORDER, one-to-many with ADDRESS
 
-#### 9.3.2 ORDER
+#### 8.3.2 ORDER
 - **Purpose**: Represents customer orders
 - **Key Attributes**:
   - `order_id`: Primary key
@@ -489,7 +387,7 @@ erDiagram
   - `status`: Order status (pending, processing, shipped, delivered, cancelled)
 - **Relationships**: Many-to-one with USER, one-to-many with ORDER_ITEM, one-to-one with PAYMENT, one-to-one with SHIPMENT
 
-#### 9.3.3 PRODUCT
+#### 8.3.3 PRODUCT
 - **Purpose**: Product catalog information
 - **Key Attributes**:
   - `product_id`: Primary key
@@ -498,29 +396,29 @@ erDiagram
   - `stock_quantity`: Available inventory
 - **Relationships**: Many-to-one with CATEGORY, one-to-many with ORDER_ITEM
 
-#### 9.3.4 CATEGORY
+#### 8.3.4 CATEGORY
 - **Purpose**: Product categorization
 - **Key Attributes**:
   - `category_id`: Primary key
   - `parent_category_id`: Self-referencing for hierarchical categories
 - **Relationships**: One-to-many with PRODUCT, self-referencing for parent-child relationships
 
-### 9.4 Data Storage Strategy
+### 8.4 Data Storage Strategy
 - **Primary Database**: PostgreSQL for transactional data
 - **Caching**: Redis for frequently accessed data
 - **Backup**: Daily automated backups with 30-day retention
 - **Archiving**: Long-term data archiving strategy
 
-### 9.5 Data Flow
+### 8.5 Data Flow
 - **Write Operations**: All writes go to primary database
 - **Read Operations**: Read replicas for read-heavy operations
 - **Cache Strategy**: Cache frequently accessed data with TTL
 
 ---
 
-## 10. Integration & Data Flow
+## 9. Integration & Data Flow
 
-### 10.1 Integration Architecture
+### 9.1 Integration Architecture
 
 ```mermaid
 sequenceDiagram
@@ -563,45 +461,147 @@ sequenceDiagram
     W-->>C: Order Confirmation
 ```
 
-### 10.2 Integration Patterns
+### 9.2 Integration Patterns
 - **REST API**: Synchronous communication between services
 - **Message Queue**: Asynchronous event-driven communication
 - **API Gateway**: Centralized API management and routing
 
-### 10.3 External Integrations
+### 9.3 External Integrations
 - **Payment Gateway**: REST API integration for payment processing
 - **Email Service**: REST API integration for email notifications
 - **Legacy System**: API integration for data synchronization
 
 ---
 
-## 11. Security Architecture
+## 10. Security Architecture
 
-### 11.1 Security Principles
+### 10.1 Security Principles
 - **Defense in Depth**: Multiple layers of security controls
 - **Least Privilege**: Minimal access rights required
 - **Zero Trust**: Verify every request, trust no one by default
 
-### 11.2 Authentication & Authorization
+### 10.2 Authentication & Authorization
 - **Authentication**: OAuth 2.0 with JWT tokens
 - **Authorization**: Role-Based Access Control (RBAC)
 - **Token Management**: Short-lived access tokens with refresh tokens
 
-### 11.3 Data Security
+### 10.3 Data Security
 - **Encryption at Rest**: Database encryption using AES-256
 - **Encryption in Transit**: TLS 1.3 for all communications
 - **PII Protection**: Data masking and anonymization for sensitive data
 
-### 11.4 Network Security
+### 10.4 Network Security
 - **VPC**: Network isolation
 - **Security Groups**: Firewall rules for network access
 - **WAF**: Web Application Firewall for API protection
 - **DDoS Protection**: Distributed Denial of Service mitigation
 
-### 11.5 Compliance
+### 10.5 Compliance
 - **GDPR**: Data protection and privacy compliance
 - **SOC 2**: Security and availability controls
 - **PCI DSS**: Payment card data security (if applicable)
+
+---
+
+## 11. Deployment View
+
+The Deployment diagram shows how containers are deployed to infrastructure.
+
+```mermaid
+C4Deployment
+    title Deployment Diagram
+    
+    Deployment_Node(cloud, "Cloud Provider", "AWS/Azure/GCP") {
+        Deployment_Node(webTier, "Web Tier", "Load Balanced") {
+            Container(webapp1, "Web App Instance 1", "React Application")
+            Container(webapp2, "Web App Instance 2", "React Application")
+        }
+        
+        Deployment_Node(apiTier, "API Tier", "Load Balanced") {
+            Container(api1, "API Gateway Instance 1", "Node.js")
+            Container(api2, "API Gateway Instance 2", "Node.js")
+        }
+        
+        Deployment_Node(appTier, "Application Tier") {
+            Container(auth1, "Auth Service Instance 1", "OAuth 2.0")
+            Container(auth2, "Auth Service Instance 2", "OAuth 2.0")
+            Container(business1, "Business Service Instance 1", "Spring Boot")
+            Container(business2, "Business Service Instance 2", "Spring Boot")
+        }
+        
+        Deployment_Node(dataTier, "Data Tier") {
+            ContainerDb_Ext(database, "Primary Database", "PostgreSQL", "Master")
+            ContainerDb_Ext(databaseReplica, "Read Replica", "PostgreSQL", "Replica")
+            ContainerQueue(messageQueue, "Message Queue", "RabbitMQ")
+        }
+        
+        Deployment_Node(cacheTier, "Cache Tier") {
+            ContainerDb_Ext(cache, "Redis Cache", "Redis", "In-memory cache")
+        }
+    }
+    
+    System_Ext(paymentGateway, "Payment Gateway", "External Service")
+    System_Ext(emailService, "Email Service", "External Service")
+    
+    Rel(webapp1, api1, "HTTPS")
+    Rel(webapp2, api2, "HTTPS")
+    Rel(api1, auth1, "HTTPS")
+    Rel(api2, auth2, "HTTPS")
+    Rel(api1, business1, "HTTPS")
+    Rel(api2, business2, "HTTPS")
+    Rel(business1, database, "JDBC")
+    Rel(business2, database, "JDBC")
+    Rel(business1, databaseReplica, "JDBC (Read)")
+    Rel(business2, databaseReplica, "JDBC (Read)")
+    Rel(business1, cache, "Redis Protocol")
+    Rel(business2, cache, "Redis Protocol")
+    Rel(business1, messageQueue, "AMQP")
+    Rel(business2, messageQueue, "AMQP")
+    Rel(business1, paymentGateway, "HTTPS")
+    Rel(business2, paymentGateway, "HTTPS")
+    Rel(business1, emailService, "HTTPS")
+    Rel(business2, emailService, "HTTPS")
+```
+
+### 11.1 Infrastructure Overview
+
+#### 11.1.1 Web Tier
+- **Instances**: 2+ load-balanced web application instances
+- **Technology**: React application served via CDN/Web Server
+- **Scaling**: Horizontal scaling based on load
+
+#### 11.1.2 API Tier
+- **Instances**: 2+ load-balanced API gateway instances
+- **Technology**: Node.js
+- **Scaling**: Horizontal scaling based on request volume
+
+#### 11.1.3 Application Tier
+- **Auth Service**: 2+ instances for high availability
+- **Business Service**: 2+ instances for high availability
+- **Technology**: Spring Boot microservices
+- **Scaling**: Horizontal scaling based on CPU/memory metrics
+
+#### 11.1.4 Data Tier
+- **Primary Database**: PostgreSQL master instance
+- **Read Replica**: PostgreSQL replica for read operations
+- **Message Queue**: RabbitMQ cluster
+- **Backup Strategy**: Daily automated backups with point-in-time recovery
+
+#### 11.1.5 Cache Tier
+- **Technology**: Redis
+- **Purpose**: In-memory caching for improved performance
+- **Scaling**: Redis cluster for high availability
+
+### 11.2 Deployment Strategy
+- **Blue-Green Deployment**: Zero-downtime deployments
+- **Rolling Updates**: Gradual rollout of new versions
+- **Health Checks**: Automated health monitoring and auto-recovery
+
+### 11.3 Network Architecture
+- **VPC**: Virtual Private Cloud for network isolation
+- **Subnets**: Public and private subnets for security
+- **Load Balancers**: Application Load Balancers for traffic distribution
+- **Security Groups**: Network-level access control
 
 ---
 

@@ -15,10 +15,10 @@
 5. [Ngữ cảnh Hệ thống (C4 Cấp 1)](#5-ngữ-cảnh-hệ-thống-c4-cấp-1)
 6. [Khung nhìn Logic (C4 Cấp 2 - Container)](#6-khung-nhìn-logic-c4-cấp-2---container)
 7. [Khung nhìn Thành phần (C4 Cấp 3)](#7-khung-nhìn-thành-phần-c4-cấp-3)
-8. [Khung nhìn Triển khai (C4 Cấp 4)](#8-khung-nhìn-triển-khai-c4-cấp-4)
-9. [Kiến trúc Dữ liệu & ERD](#9-kiến-trúc-dữ-liệu--erd)
-10. [Tích hợp & Luồng Dữ liệu](#10-tích-hợp--luồng-dữ-liệu)
-11. [Kiến trúc Bảo mật](#11-kiến-trúc-bảo-mật)
+8. [Kiến trúc Dữ liệu & ERD](#8-kiến-trúc-dữ-liệu--erd)
+9. [Tích hợp & Luồng Dữ liệu](#9-tích-hợp--luồng-dữ-liệu)
+10. [Kiến trúc Bảo mật](#10-kiến-trúc-bảo-mật)
+11. [Khung nhìn Triển khai](#11-khung-nhìn-triển-khai)
 12. [Yêu cầu Phi Chức năng](#12-yêu-cầu-phi-chức-năng)
 13. [Quyết định Kiến trúc](#13-quyết-định-kiến-trúc)
 14. [Rủi ro & Giảm thiểu](#14-rủi-ro--giảm-thiểu)
@@ -271,114 +271,12 @@ C4Component
 
 ---
 
-## 8. Khung nhìn Triển khai (C4 Cấp 4)
+## 8. Kiến trúc Dữ liệu & ERD
 
-Sơ đồ Triển khai cho thấy cách các container được triển khai lên hạ tầng.
-
-```mermaid
-C4Deployment
-    title Sơ đồ Triển khai
-    
-    Deployment_Node(cloud, "Nhà cung cấp Cloud", "AWS/Azure/GCP") {
-        Deployment_Node(webTier, "Tầng Web", "Cân bằng tải") {
-            Container(webapp1, "Instance Ứng dụng Web 1", "Ứng dụng React")
-            Container(webapp2, "Instance Ứng dụng Web 2", "Ứng dụng React")
-        }
-        
-        Deployment_Node(apiTier, "Tầng API", "Cân bằng tải") {
-            Container(api1, "Instance Cổng API 1", "Node.js")
-            Container(api2, "Instance Cổng API 2", "Node.js")
-        }
-        
-        Deployment_Node(appTier, "Tầng Ứng dụng") {
-            Container(auth1, "Instance Dịch vụ Auth 1", "OAuth 2.0")
-            Container(auth2, "Instance Dịch vụ Auth 2", "OAuth 2.0")
-            Container(business1, "Instance Dịch vụ Nghiệp vụ 1", "Spring Boot")
-            Container(business2, "Instance Dịch vụ Nghiệp vụ 2", "Spring Boot")
-        }
-        
-        Deployment_Node(dataTier, "Tầng Dữ liệu") {
-            ContainerDb_Ext(database, "Cơ sở dữ liệu Chính", "PostgreSQL", "Master")
-            ContainerDb_Ext(databaseReplica, "Bản sao Đọc", "PostgreSQL", "Replica")
-            ContainerQueue(messageQueue, "Hàng đợi Tin nhắn", "RabbitMQ")
-        }
-        
-        Deployment_Node(cacheTier, "Tầng Cache") {
-            ContainerDb_Ext(cache, "Cache Redis", "Redis", "Cache trong bộ nhớ")
-        }
-    }
-    
-    System_Ext(paymentGateway, "Cổng Thanh toán", "Dịch vụ Bên ngoài")
-    System_Ext(emailService, "Dịch vụ Email", "Dịch vụ Bên ngoài")
-    
-    Rel(webapp1, api1, "HTTPS")
-    Rel(webapp2, api2, "HTTPS")
-    Rel(api1, auth1, "HTTPS")
-    Rel(api2, auth2, "HTTPS")
-    Rel(api1, business1, "HTTPS")
-    Rel(api2, business2, "HTTPS")
-    Rel(business1, database, "JDBC")
-    Rel(business2, database, "JDBC")
-    Rel(business1, databaseReplica, "JDBC (Đọc)")
-    Rel(business2, databaseReplica, "JDBC (Đọc)")
-    Rel(business1, cache, "Giao thức Redis")
-    Rel(business2, cache, "Giao thức Redis")
-    Rel(business1, messageQueue, "AMQP")
-    Rel(business2, messageQueue, "AMQP")
-    Rel(business1, paymentGateway, "HTTPS")
-    Rel(business2, paymentGateway, "HTTPS")
-    Rel(business1, emailService, "HTTPS")
-    Rel(business2, emailService, "HTTPS")
-```
-
-### 8.1 Tổng quan Hạ tầng
-
-#### 8.1.1 Tầng Web
-- **Instances**: 2+ instances ứng dụng web được cân bằng tải
-- **Công nghệ**: Ứng dụng React được phục vụ qua CDN/Web Server
-- **Mở rộng**: Mở rộng ngang dựa trên tải
-
-#### 8.1.2 Tầng API
-- **Instances**: 2+ instances cổng API được cân bằng tải
-- **Công nghệ**: Node.js
-- **Mở rộng**: Mở rộng ngang dựa trên khối lượng yêu cầu
-
-#### 8.1.3 Tầng Ứng dụng
-- **Dịch vụ Auth**: 2+ instances cho tính khả dụng cao
-- **Dịch vụ Nghiệp vụ**: 2+ instances cho tính khả dụng cao
-- **Công nghệ**: Microservices Spring Boot
-- **Mở rộng**: Mở rộng ngang dựa trên số liệu CPU/bộ nhớ
-
-#### 8.1.4 Tầng Dữ liệu
-- **Cơ sở dữ liệu Chính**: Instance master PostgreSQL
-- **Bản sao Đọc**: Bản sao PostgreSQL cho các thao tác đọc
-- **Hàng đợi Tin nhắn**: Cluster RabbitMQ
-- **Chiến lược Sao lưu**: Sao lưu tự động hàng ngày với khôi phục tại thời điểm cụ thể
-
-#### 8.1.5 Tầng Cache
-- **Công nghệ**: Redis
-- **Mục đích**: Cache trong bộ nhớ để cải thiện hiệu suất
-- **Mở rộng**: Cluster Redis cho tính khả dụng cao
-
-### 8.2 Chiến lược Triển khai
-- **Triển khai Blue-Green**: Triển khai không thời gian chết
-- **Cập nhật Dần dần**: Triển khai dần các phiên bản mới
-- **Kiểm tra Sức khỏe**: Giám sát sức khỏe tự động và tự phục hồi
-
-### 8.3 Kiến trúc Mạng
-- **VPC**: Cloud riêng ảo để cách ly mạng
-- **Subnets**: Subnets công cộng và riêng tư cho bảo mật
-- **Cân bằng Tải**: Cân bằng tải ứng dụng để phân phối lưu lượng
-- **Nhóm Bảo mật**: Kiểm soát truy cập cấp mạng
-
----
-
-## 9. Kiến trúc Dữ liệu & ERD
-
-### 9.1 Tổng quan Mô hình Dữ liệu
+### 8.1 Tổng quan Mô hình Dữ liệu
 Mô tả mô hình dữ liệu và các thực thể chính.
 
-### 9.2 Sơ đồ Quan hệ Thực thể (ERD)
+### 8.2 Sơ đồ Quan hệ Thực thể (ERD)
 
 ```mermaid
 erDiagram
@@ -471,9 +369,9 @@ erDiagram
     }
 ```
 
-### 9.3 Mô tả Thực thể
+### 8.3 Mô tả Thực thể
 
-#### 9.3.1 USER
+#### 8.3.1 USER
 - **Mục đích**: Lưu trữ thông tin tài khoản người dùng
 - **Thuộc tính Chính**: 
   - `user_id`: Khóa chính
@@ -481,7 +379,7 @@ erDiagram
   - `password_hash`: Mật khẩu được mã hóa
 - **Quan hệ**: Một-nhiều với ORDER, một-nhiều với ADDRESS
 
-#### 9.3.2 ORDER
+#### 8.3.2 ORDER
 - **Mục đích**: Đại diện cho đơn hàng khách hàng
 - **Thuộc tính Chính**:
   - `order_id`: Khóa chính
@@ -489,7 +387,7 @@ erDiagram
   - `status`: Trạng thái đơn hàng (chờ xử lý, đang xử lý, đã gửi, đã giao, đã hủy)
 - **Quan hệ**: Nhiều-một với USER, một-nhiều với ORDER_ITEM, một-một với PAYMENT, một-một với SHIPMENT
 
-#### 9.3.3 PRODUCT
+#### 8.3.3 PRODUCT
 - **Mục đích**: Thông tin danh mục sản phẩm
 - **Thuộc tính Chính**:
   - `product_id`: Khóa chính
@@ -498,29 +396,29 @@ erDiagram
   - `stock_quantity`: Hàng tồn kho có sẵn
 - **Quan hệ**: Nhiều-một với CATEGORY, một-nhiều với ORDER_ITEM
 
-#### 9.3.4 CATEGORY
+#### 8.3.4 CATEGORY
 - **Mục đích**: Phân loại sản phẩm
 - **Thuộc tính Chính**:
   - `category_id`: Khóa chính
   - `parent_category_id`: Tự tham chiếu cho các danh mục phân cấp
 - **Quan hệ**: Một-nhiều với PRODUCT, tự tham chiếu cho các quan hệ cha-con
 
-### 9.4 Chiến lược Lưu trữ Dữ liệu
+### 8.4 Chiến lược Lưu trữ Dữ liệu
 - **Cơ sở dữ liệu Chính**: PostgreSQL cho dữ liệu giao dịch
 - **Cache**: Redis cho dữ liệu được truy cập thường xuyên
 - **Sao lưu**: Sao lưu tự động hàng ngày với lưu trữ 30 ngày
 - **Lưu trữ**: Chiến lược lưu trữ dữ liệu dài hạn
 
-### 9.5 Luồng Dữ liệu
+### 8.5 Luồng Dữ liệu
 - **Thao tác Ghi**: Tất cả các ghi đi tới cơ sở dữ liệu chính
 - **Thao tác Đọc**: Bản sao đọc cho các thao tác đọc nặng
 - **Chiến lược Cache**: Cache dữ liệu được truy cập thường xuyên với TTL
 
 ---
 
-## 10. Tích hợp & Luồng Dữ liệu
+## 9. Tích hợp & Luồng Dữ liệu
 
-### 10.1 Kiến trúc Tích hợp
+### 9.1 Kiến trúc Tích hợp
 
 ```mermaid
 sequenceDiagram
@@ -563,45 +461,147 @@ sequenceDiagram
     W-->>C: Xác nhận Đơn hàng
 ```
 
-### 10.2 Mẫu Tích hợp
+### 9.2 Mẫu Tích hợp
 - **REST API**: Giao tiếp đồng bộ giữa các dịch vụ
 - **Hàng đợi Tin nhắn**: Giao tiếp bất đồng bộ dựa trên sự kiện
 - **Cổng API**: Quản lý và định tuyến API tập trung
 
-### 10.3 Tích hợp Bên ngoài
+### 9.3 Tích hợp Bên ngoài
 - **Cổng Thanh toán**: Tích hợp REST API cho xử lý thanh toán
 - **Dịch vụ Email**: Tích hợp REST API cho thông báo email
 - **Hệ thống Kế thừa**: Tích hợp API cho đồng bộ hóa dữ liệu
 
 ---
 
-## 11. Kiến trúc Bảo mật
+## 10. Kiến trúc Bảo mật
 
-### 11.1 Nguyên tắc Bảo mật
+### 10.1 Nguyên tắc Bảo mật
 - **Bảo vệ Nhiều lớp**: Nhiều lớp kiểm soát bảo mật
 - **Đặc quyền Tối thiểu**: Quyền truy cập tối thiểu cần thiết
 - **Không Tin tưởng**: Xác minh mọi yêu cầu, không tin tưởng ai theo mặc định
 
-### 11.2 Xác thực & Ủy quyền
+### 10.2 Xác thực & Ủy quyền
 - **Xác thực**: OAuth 2.0 với token JWT
 - **Ủy quyền**: Kiểm soát truy cập dựa trên vai trò (RBAC)
 - **Quản lý Token**: Token truy cập thời gian ngắn với token làm mới
 
-### 11.3 Bảo mật Dữ liệu
+### 10.3 Bảo mật Dữ liệu
 - **Mã hóa Khi Nghỉ**: Mã hóa cơ sở dữ liệu sử dụng AES-256
 - **Mã hóa Khi Truyền**: TLS 1.3 cho tất cả các giao tiếp
 - **Bảo vệ PII**: Che giấu và ẩn danh hóa dữ liệu nhạy cảm
 
-### 11.4 Bảo mật Mạng
+### 10.4 Bảo mật Mạng
 - **VPC**: Cách ly mạng
 - **Nhóm Bảo mật**: Quy tắc tường lửa cho truy cập mạng
 - **WAF**: Tường lửa Ứng dụng Web để bảo vệ API
 - **Bảo vệ DDoS**: Giảm thiểu Từ chối Dịch vụ Phân tán
 
-### 11.5 Tuân thủ
+### 10.5 Tuân thủ
 - **GDPR**: Tuân thủ bảo vệ và quyền riêng tư dữ liệu
 - **SOC 2**: Kiểm soát bảo mật và khả dụng
 - **PCI DSS**: Bảo mật dữ liệu thẻ thanh toán (nếu áp dụng)
+
+---
+
+## 11. Khung nhìn Triển khai
+
+Sơ đồ Triển khai cho thấy cách các container được triển khai lên hạ tầng.
+
+```mermaid
+C4Deployment
+    title Sơ đồ Triển khai
+    
+    Deployment_Node(cloud, "Nhà cung cấp Cloud", "AWS/Azure/GCP") {
+        Deployment_Node(webTier, "Tầng Web", "Cân bằng tải") {
+            Container(webapp1, "Instance Ứng dụng Web 1", "Ứng dụng React")
+            Container(webapp2, "Instance Ứng dụng Web 2", "Ứng dụng React")
+        }
+        
+        Deployment_Node(apiTier, "Tầng API", "Cân bằng tải") {
+            Container(api1, "Instance Cổng API 1", "Node.js")
+            Container(api2, "Instance Cổng API 2", "Node.js")
+        }
+        
+        Deployment_Node(appTier, "Tầng Ứng dụng") {
+            Container(auth1, "Instance Dịch vụ Auth 1", "OAuth 2.0")
+            Container(auth2, "Instance Dịch vụ Auth 2", "OAuth 2.0")
+            Container(business1, "Instance Dịch vụ Nghiệp vụ 1", "Spring Boot")
+            Container(business2, "Instance Dịch vụ Nghiệp vụ 2", "Spring Boot")
+        }
+        
+        Deployment_Node(dataTier, "Tầng Dữ liệu") {
+            ContainerDb_Ext(database, "Cơ sở dữ liệu Chính", "PostgreSQL", "Master")
+            ContainerDb_Ext(databaseReplica, "Bản sao Đọc", "PostgreSQL", "Replica")
+            ContainerQueue(messageQueue, "Hàng đợi Tin nhắn", "RabbitMQ")
+        }
+        
+        Deployment_Node(cacheTier, "Tầng Cache") {
+            ContainerDb_Ext(cache, "Cache Redis", "Redis", "Cache trong bộ nhớ")
+        }
+    }
+    
+    System_Ext(paymentGateway, "Cổng Thanh toán", "Dịch vụ Bên ngoài")
+    System_Ext(emailService, "Dịch vụ Email", "Dịch vụ Bên ngoài")
+    
+    Rel(webapp1, api1, "HTTPS")
+    Rel(webapp2, api2, "HTTPS")
+    Rel(api1, auth1, "HTTPS")
+    Rel(api2, auth2, "HTTPS")
+    Rel(api1, business1, "HTTPS")
+    Rel(api2, business2, "HTTPS")
+    Rel(business1, database, "JDBC")
+    Rel(business2, database, "JDBC")
+    Rel(business1, databaseReplica, "JDBC (Đọc)")
+    Rel(business2, databaseReplica, "JDBC (Đọc)")
+    Rel(business1, cache, "Giao thức Redis")
+    Rel(business2, cache, "Giao thức Redis")
+    Rel(business1, messageQueue, "AMQP")
+    Rel(business2, messageQueue, "AMQP")
+    Rel(business1, paymentGateway, "HTTPS")
+    Rel(business2, paymentGateway, "HTTPS")
+    Rel(business1, emailService, "HTTPS")
+    Rel(business2, emailService, "HTTPS")
+```
+
+### 11.1 Tổng quan Hạ tầng
+
+#### 11.1.1 Tầng Web
+- **Instances**: 2+ instances ứng dụng web được cân bằng tải
+- **Công nghệ**: Ứng dụng React được phục vụ qua CDN/Web Server
+- **Mở rộng**: Mở rộng ngang dựa trên tải
+
+#### 11.1.2 Tầng API
+- **Instances**: 2+ instances cổng API được cân bằng tải
+- **Công nghệ**: Node.js
+- **Mở rộng**: Mở rộng ngang dựa trên khối lượng yêu cầu
+
+#### 11.1.3 Tầng Ứng dụng
+- **Dịch vụ Auth**: 2+ instances cho tính khả dụng cao
+- **Dịch vụ Nghiệp vụ**: 2+ instances cho tính khả dụng cao
+- **Công nghệ**: Microservices Spring Boot
+- **Mở rộng**: Mở rộng ngang dựa trên số liệu CPU/bộ nhớ
+
+#### 11.1.4 Tầng Dữ liệu
+- **Cơ sở dữ liệu Chính**: Instance master PostgreSQL
+- **Bản sao Đọc**: Bản sao PostgreSQL cho các thao tác đọc
+- **Hàng đợi Tin nhắn**: Cluster RabbitMQ
+- **Chiến lược Sao lưu**: Sao lưu tự động hàng ngày với khôi phục tại thời điểm cụ thể
+
+#### 11.1.5 Tầng Cache
+- **Công nghệ**: Redis
+- **Mục đích**: Cache trong bộ nhớ để cải thiện hiệu suất
+- **Mở rộng**: Cluster Redis cho tính khả dụng cao
+
+### 11.2 Chiến lược Triển khai
+- **Triển khai Blue-Green**: Triển khai không thời gian chết
+- **Cập nhật Dần dần**: Triển khai dần các phiên bản mới
+- **Kiểm tra Sức khỏe**: Giám sát sức khỏe tự động và tự phục hồi
+
+### 11.3 Kiến trúc Mạng
+- **VPC**: Cloud riêng ảo để cách ly mạng
+- **Subnets**: Subnets công cộng và riêng tư cho bảo mật
+- **Cân bằng Tải**: Cân bằng tải ứng dụng để phân phối lưu lượng
+- **Nhóm Bảo mật**: Kiểm soát truy cập cấp mạng
 
 ---
 
