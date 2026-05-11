@@ -607,35 +607,120 @@ C4Deployment
 
 ## 12. Non-Functional Requirements
 
+Each quality attribute pairs measurable **targets** (the requirement) with the **strategies** (tactics/patterns) used to achieve them. Targets are the contract with stakeholders; strategies are architectural decisions and can evolve while targets remain stable.
+
 ### 12.1 Performance
-- **Response Time**: API responses < 200ms (p95)
-- **Throughput**: Support 1000 requests/second
-- **Database Query**: Query execution < 100ms (p95)
+
+**Targets**
+| ID | Metric | Target |
+|----|--------|--------|
+| NFR-PERF-01 | API response time | < 200ms (p95) |
+| NFR-PERF-02 | Throughput | 1000 requests/second |
+| NFR-PERF-03 | Database query | < 100ms (p95) |
+
+**Strategies**
+- **Caching**: Redis for frequently accessed data with TTL-based invalidation
+- **Query optimization**: Indexing, query plan review, N+1 prevention
+- **Async processing**: Offload long-running work to message queue
+- **CDN**: Static assets served via edge CDN
+- **Connection pooling**: Reuse DB/HTTP connections
+- **Verification**: Load tests in CI, APM dashboards, p95 alerting
+
+---
 
 ### 12.2 Scalability
-- **Horizontal Scaling**: Auto-scaling based on CPU/memory metrics
-- **Database Scaling**: Read replicas for read-heavy workloads
-- **Caching**: Redis caching for frequently accessed data
+
+**Targets**
+| ID | Metric | Target |
+|----|--------|--------|
+| NFR-SCAL-01 | Horizontal scale trigger | Auto-scale at 70% CPU / 75% memory |
+| NFR-SCAL-02 | Peak load capacity | 5x baseline traffic |
+| NFR-SCAL-03 | Scale-out time | < 3 minutes to add instance |
+
+**Strategies**
+- **Stateless services**: No in-memory session; state in Redis/DB
+- **Horizontal autoscaling**: Kubernetes HPA / cloud auto-scaling groups
+- **Read replicas**: PostgreSQL replicas for read-heavy workloads
+- **Sharding/partitioning**: Plan for data partitioning at scale thresholds
+- **Backpressure**: Rate limiting at API Gateway
+- **Verification**: Stress tests, chaos engineering, capacity planning reviews
+
+---
 
 ### 12.3 Availability
-- **Uptime Target**: 99.9% availability (8.76 hours downtime/year)
-- **High Availability**: Multi-AZ deployment
-- **Disaster Recovery**: RTO < 4 hours, RPO < 1 hour
+
+**Targets**
+| ID | Metric | Target |
+|----|--------|--------|
+| NFR-AVAIL-01 | Uptime | 99.9% (8.76 hours downtime/year) |
+| NFR-AVAIL-02 | RTO (recovery time) | < 4 hours |
+| NFR-AVAIL-03 | RPO (data loss window) | < 1 hour |
+
+**Strategies**
+- **Multi-AZ deployment**: Workloads spread across availability zones
+- **Redundancy**: 2+ instances per tier behind load balancer
+- **Failover**: Automated DB failover with replica promotion
+- **Backups**: Daily automated backups, point-in-time recovery
+- **DR runbook**: Documented disaster recovery procedure, tested quarterly
+- **Verification**: Game days, failover drills, SLO dashboards
+
+---
 
 ### 12.4 Reliability
-- **Error Handling**: Comprehensive error handling and retry logic
-- **Circuit Breaker**: Circuit breaker pattern for external service calls
-- **Health Checks**: Automated health monitoring and auto-recovery
+
+**Targets**
+| ID | Metric | Target |
+|----|--------|--------|
+| NFR-REL-01 | Error rate | < 0.1% of requests |
+| NFR-REL-02 | Mean time between failures (MTBF) | > 30 days |
+| NFR-REL-03 | Health check recovery | Auto-recover in < 60s |
+
+**Strategies**
+- **Retry with backoff**: Exponential backoff for transient failures
+- **Circuit breaker**: Open circuit on downstream failure (e.g., Resilience4j)
+- **Bulkhead**: Isolate resource pools to limit blast radius
+- **Timeouts**: Explicit timeouts on every external call
+- **Idempotency**: Idempotency keys for retryable mutations
+- **Health checks**: Liveness/readiness probes, auto-restart on failure
+- **Verification**: Chaos testing, fault injection, error budget tracking
+
+---
 
 ### 12.5 Maintainability
-- **Code Quality**: Code reviews, automated testing
-- **Documentation**: Comprehensive technical documentation
-- **Monitoring**: Application performance monitoring and logging
+
+**Targets**
+| ID | Metric | Target |
+|----|--------|--------|
+| NFR-MAINT-01 | Test coverage | > 80% on critical paths |
+| NFR-MAINT-02 | Mean time to detect (MTTD) | < 5 minutes |
+| NFR-MAINT-03 | Deployment frequency | Daily, on-demand |
+
+**Strategies**
+- **Code quality**: Mandatory code review, linters, static analysis
+- **Automated testing**: Unit, integration, contract, e2e tests in CI
+- **Observability**: Structured logging, metrics (Prometheus), distributed tracing
+- **Documentation**: ADRs, runbooks, API specs (OpenAPI)
+- **Modular design**: Clear bounded contexts, low coupling
+- **Verification**: Code metrics tracked, post-incident reviews, doc audits
+
+---
 
 ### 12.6 Usability
-- **User Interface**: Intuitive and responsive design
-- **Accessibility**: WCAG 2.1 AA compliance
-- **Mobile Support**: Responsive design for mobile devices
+
+**Targets**
+| ID | Metric | Target |
+|----|--------|--------|
+| NFR-USE-01 | Accessibility | WCAG 2.1 AA compliance |
+| NFR-USE-02 | Mobile support | Responsive design, viewport ≥ 320px |
+| NFR-USE-03 | Task completion time | < 3 clicks for core workflows |
+
+**Strategies**
+- **Design system**: Consistent component library, design tokens
+- **A11y testing**: Automated axe-core scans + manual screen reader testing
+- **Responsive layout**: Mobile-first CSS, breakpoint testing
+- **User research**: Usability testing with target personas
+- **Internationalization**: i18n-ready strings, RTL support where required
+- **Verification**: Accessibility audits, user testing sessions, analytics on funnel completion
 
 ---
 
