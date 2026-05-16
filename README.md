@@ -6,7 +6,8 @@
 
 This repository provides a modern, comprehensive template for Solution Architecture Documents (SAD) that follows industry best practices for 2026. The template incorporates:
 
-- **C4 Model** for architecture visualization
+- **Solution Landscape** for high-level capability domain overview (pre-C4)
+- **C4 Model** for architecture visualization (Levels 1–4)
 - **Mermaid diagrams** for GitHub-native diagram rendering
 - **4+1 Architectural View Model** principles
 - **Logical View** and **Deployment View** as required components
@@ -90,13 +91,15 @@ Templates and examples are available in multiple languages. Each language direct
 ## 📐 Key Features
 
 ### C4 Model Integration
-The template uses the C4 Model for architecture visualization at four levels:
-- **Level 1**: System Context Diagram
+The template uses the C4 Model for architecture visualization, preceded by a Solution Landscape for business-level overview:
+- **Level 0**: Solution Landscape — capability domains and application groupings (pre-C4, audience: business + management)
+- **Level 1**: System Context Diagram — system boundary and external actors
 - **Level 2**: Container Diagram (Logical View)
 - **Level 3**: Component Diagram
 - **Level 4**: Deployment Diagram
 
 ### Diagram Types Included
+- ✅ Solution Landscape (block-beta) — high-level capability map
 - ✅ System Context (C4Context)
 - ✅ Container Diagram (C4Container) - Logical View
 - ✅ Component Diagram (C4Component)
@@ -117,7 +120,9 @@ The SAD template includes the following sections:
 2. **Architecture Vision** - Vision, principles, constraints
 3. **Business Requirements** - Business problems and functional requirements
 4. **Technology Baseline** - Current state and technology stack
-5. **System Context** - C4 Level 1 diagram
+5. **System Landscape** - Two-level view:
+   - **5.1 Solution Landscape** - Capability domains and application groupings (block-beta, business audience)
+   - **5.2 Context Diagram** - C4 Level 1, system boundary and external actors
 6. **Logical View** - C4 Level 2 Container diagram
 7. **Component View** - C4 Level 3 diagram
 8. **Data Architecture & ERD** - Entity Relationship Diagram
@@ -207,7 +212,7 @@ The template includes **optional sections** for decisions that significantly imp
 
 ### When Creating Your SAD
 
-1. **Start with Context**: Begin with the System Context diagram to establish scope
+1. **Start with the Landscape**: Begin with Solution Landscape to establish capability scope, then Context Diagram for system boundary
 2. **Progressive Detail**: Move from high-level (Context) to detailed (Component) views
 3. **Keep It Current**: Update the document as the architecture evolves
 4. **Stakeholder Focus**: Tailor sections to your audience's needs

@@ -13,8 +13,8 @@
 2. [Architecture Vision](#2-architecture-vision)
 3. [Business Requirements](#3-business-requirements)
 4. [Technology Baseline](#4-technology-baseline)
-5. [System Context (C4 Level 1)](#5-system-context-c4-level-1)
-6. [Logical View (C4 Level 2 - Container)](#6-logical-view-c4-level-2---container)
+5. [System Landscape](#5-system-landscape)
+6. [Logical View](#6-logical-view)
 7. [Component View (C4 Level 3)](#7-component-view-c4-level-3)
 8. [Deployment View (C4 Level 4)](#8-deployment-view-c4-level-4)
 9. [Data Architecture & ERD](#9-data-architecture--erd)
@@ -165,9 +165,73 @@ The platform is being built from scratch with no existing legacy systems. The ar
 
 ---
 
-## 5. System Context (C4 Level 1)
+## 5. System Landscape
 
-The System Context diagram shows how the RideShare platform interacts with users and external systems.
+### 5.1 Solution Landscape
+
+High-level overview of capability domains and application groupings for the RideShare platform.
+
+```mermaid
+block-beta
+  columns 1
+
+  block:solution["Solution Boundary"]:1
+    columns 3
+
+    block:clients["Client Applications"]:3
+      passengerApp["Passenger App"]
+      driverApp["Driver App"]
+      adminDash["Admin Dashboard"]
+    end
+
+    block:coreServices["Core Platform Services"]:2
+      matching["Ride Matching"]
+      trip["Trip Management"]
+      pricing["Dynamic Pricing"]
+      user["User Management"]
+      payment["Payment Processing"]
+      rating["Ratings & Reviews"]
+    end
+
+    block:realtimeLayer["Real-Time Layer"]:1
+      websocket["WebSocket Server"]
+      location["Location Tracking"]
+      notification["Notifications"]
+    end
+
+    block:dataLayer["Data & Messaging"]:3
+      pgdb["PostgreSQL"]
+      mongodb["MongoDB"]
+      redis["Redis"]
+      kafka["Apache Kafka"]
+      elastic["Elasticsearch"]
+    end
+  end
+
+  block:externalSvcs["External Services"]:1
+    columns 5
+    maps["Maps Service"]
+    payGW["Payment Gateway"]
+    sms["SMS / Push"]
+    bgCheck["Background Check"]
+    banking["Banking System"]
+  end
+```
+
+#### 5.1.1 Domain Descriptions
+| Domain | Description |
+|--------|-------------|
+| Client Applications | Mobile apps for passengers and drivers, web dashboard for operations |
+| Core Platform Services | Business logic: matching, trips, pricing, payments, ratings |
+| Real-Time Layer | WebSocket server, live location tracking, push notifications |
+| Data & Messaging | Persistence (PostgreSQL, MongoDB), caching (Redis), event streaming (Kafka), search (Elasticsearch) |
+| External Services | Third-party integrations outside platform boundary |
+
+---
+
+### 5.2 Context Diagram (C4 Level 1)
+
+The Context Diagram shows how the RideShare platform interacts with users and external systems.
 
 ```mermaid
 C4Context
@@ -195,10 +259,10 @@ C4Context
     Rel(rideshare, bank, "Transfers payouts via", "HTTPS/API")
 ```
 
-### 5.1 System Description
+#### 5.2.1 System Description
 The RideShare Platform is a comprehensive ride-sharing service that enables passengers to request rides from nearby drivers. The system handles real-time matching, location tracking, dynamic pricing, payment processing, and provides a rating system for quality assurance.
 
-### 5.2 External Systems
+#### 5.2.2 External Systems
 - **Maps Service**: Provides geocoding, reverse geocoding, route calculation, and map visualization
 - **Payment Gateway**: Handles credit card processing, digital wallet payments, and secure transaction management
 - **SMS Service**: Sends SMS notifications and push notifications to mobile devices
@@ -207,7 +271,7 @@ The RideShare Platform is a comprehensive ride-sharing service that enables pass
 
 ---
 
-## 6. Logical View (C4 Level 2 - Container)
+## 6. Logical View
 
 The Container diagram shows the high-level technical building blocks of the RideShare platform.
 

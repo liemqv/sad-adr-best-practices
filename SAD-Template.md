@@ -12,8 +12,8 @@
 2. [Architecture Vision](#2-architecture-vision)
 3. [Business Requirements](#3-business-requirements)
 4. [Technology Baseline](#4-technology-baseline)
-5. [System Context (C4 Level 1)](#5-system-context-c4-level-1)
-6. [Logical View (C4 Level 2 - Container)](#6-logical-view-c4-level-2---container)
+5. [System Landscape](#5-system-landscape)
+6. [Logical View](#6-logical-view)
 7. [Component View (C4 Level 3)](#7-component-view-c4-level-3)
 8. [Data Architecture & ERD](#8-data-architecture--erd)
 9. [Integration & Data Flow](#9-integration--data-flow)
@@ -103,9 +103,60 @@ Description of the existing technology landscape.
 
 ---
 
-## 5. System Context (C4 Level 1)
+## 5. System Landscape
 
-The System Context diagram provides the highest level view of the system, showing how it interacts with users and other systems.
+### 5.1 Solution Landscape
+
+High-level overview of business capability domains and application groupings within the solution boundary.
+
+```mermaid
+block-beta
+  columns 1
+
+  block:solution["Solution Boundary"]:1
+    columns 3
+
+    block:frontend["Frontend Layer"]:1
+      web["Web Application"]
+      mobile["Mobile App"]
+      admin["Admin Portal"]
+    end
+
+    block:core["Core Services"]:1
+      orders["Order Management"]
+      products["Product Catalog"]
+      users["User Management"]
+      payments["Payment Processing"]
+    end
+
+    block:data["Data & Messaging"]:1
+      db["Primary Database"]
+      cache["Cache"]
+      mq["Message Queue"]
+    end
+  end
+
+  block:external["External Systems"]:1
+    columns 3
+    payGW["Payment Gateway"]
+    emailSvc["Email Service"]
+    legacy["Legacy System"]
+  end
+```
+
+#### 5.1.1 Domain Descriptions
+| Domain | Description |
+|--------|-------------|
+| Frontend Layer | User-facing applications and portals |
+| Core Services | Business logic and application services |
+| Data & Messaging | Persistence, caching, and async communication |
+| External Systems | Third-party services outside solution boundary |
+
+---
+
+### 5.2 Context Diagram (C4 Level 1)
+
+The Context Diagram provides the highest-level view of the system, showing how it interacts with users and external systems.
 
 ```mermaid
 C4Context
@@ -127,17 +178,17 @@ C4Context
     Rel(system, legacySystem, "Integrates with", "API")
 ```
 
-### 5.1 System Description
+#### 5.2.1 System Description
 Description of the system and its purpose.
 
-### 5.2 External Systems
+#### 5.2.2 External Systems
 - **Payment Gateway**: Purpose and integration method
 - **Email Service**: Purpose and integration method
 - **Legacy System**: Purpose and integration method
 
 ---
 
-## 6. Logical View (C4 Level 2 - Container)
+## 6. Logical View
 
 The Container diagram shows the high-level technical building blocks and how they interact.
 
