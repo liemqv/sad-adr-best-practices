@@ -114,33 +114,19 @@ block-beta
   columns 1
 
   block:solution["Solution Boundary"]:1
-    columns 3
-
-    block:frontend["Frontend Layer"]:1
-      web["Web Application"]
-      mobile["Mobile App"]
-      admin["Admin Portal"]
+    block:frontendRow["Frontend Layer"]:1
+      web["Web Application"] mobile["Mobile App"] admin["Admin Portal"]
     end
-
-    block:core["Core Services"]:1
-      orders["Order Management"]
-      products["Product Catalog"]
-      users["User Management"]
-      payments["Payment Processing"]
+    block:coreRow["Core Services"]:1
+      orders["Order Management"] products["Product Catalog"] users["User Management"] payments["Payment Processing"]
     end
-
-    block:data["Data & Messaging"]:1
-      db["Primary Database"]
-      cache["Cache"]
-      mq["Message Queue"]
+    block:dataRow["Data & Messaging"]:1
+      db["Primary Database"] cache["Cache"] mq["Message Queue"]
     end
   end
 
   block:external["External Systems"]:1
-    columns 3
-    payGW["Payment Gateway"]
-    emailSvc["Email Service"]
-    legacy["Legacy System"]
+    payGW["Payment Gateway"] emailSvc["Email Service"] legacy["Legacy System"]
   end
 ```
 

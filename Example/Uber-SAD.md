@@ -176,45 +176,22 @@ block-beta
   columns 1
 
   block:solution["Solution Boundary"]:1
-    columns 3
-
-    block:clients["Client Applications"]:3
-      passengerApp["Passenger App"]
-      driverApp["Driver App"]
-      adminDash["Admin Dashboard"]
+    block:clientsRow["Client Applications"]:1
+      passengerApp["Passenger App"] driverApp["Driver App"] adminDash["Admin Dashboard"]
     end
-
-    block:coreServices["Core Platform Services"]:2
-      matching["Ride Matching"]
-      trip["Trip Management"]
-      pricing["Dynamic Pricing"]
-      user["User Management"]
-      payment["Payment Processing"]
-      rating["Ratings & Reviews"]
+    block:coreRow["Core Platform Services"]:1
+      matching["Ride Matching"] trip["Trip Management"] pricing["Dynamic Pricing"] user["User Management"] payment["Payment Processing"] rating["Ratings & Reviews"]
     end
-
-    block:realtimeLayer["Real-Time Layer"]:1
-      websocket["WebSocket Server"]
-      location["Location Tracking"]
-      notification["Notifications"]
+    block:realtimeRow["Real-Time Layer"]:1
+      websocket["WebSocket Server"] location["Location Tracking"] notification["Notifications"]
     end
-
-    block:dataLayer["Data & Messaging"]:3
-      pgdb["PostgreSQL"]
-      mongodb["MongoDB"]
-      redis["Redis"]
-      kafka["Apache Kafka"]
-      elastic["Elasticsearch"]
+    block:dataRow["Data & Messaging"]:1
+      pgdb["PostgreSQL"] mongodb["MongoDB"] redis["Redis"] kafka["Apache Kafka"] elastic["Elasticsearch"]
     end
   end
 
   block:externalSvcs["External Services"]:1
-    columns 5
-    maps["Maps Service"]
-    payGW["Payment Gateway"]
-    sms["SMS / Push"]
-    bgCheck["Background Check"]
-    banking["Banking System"]
+    maps["Maps Service"] payGW["Payment Gateway"] sms["SMS / Push"] bgCheck["Background Check"] banking["Banking System"]
   end
 ```
 
